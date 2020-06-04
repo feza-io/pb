@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package feza;
+
+option go_package = "go.feza.io/pb/feza";
+
+service Exchange {
+  rpc GetTrades(TradesQuery) returns (stream Trades);
+  rpc GetQuotes(QuotesQuery) returns (stream Quotes);
+}
+
+message Trade {
+  string id = 1;
+  enum Maker {
+    Undefined = 0;
+    Buyer = 1;
+    Seller = 2;
+  }
+  Maker maker = 2;
+  double price = 3;
+  double quantity = 4;
+  string pair = 5;
+  Timestamp created_at = 6;
+}
+
+message Trades { repeated Trade trades = 1; }
+
+message TradesQuery {
+  string pair = 1;
+  int64 limit = 2;
+}
+
+message Quote {
+  double ask_price = 1;
+  double ask_quantity = 2;
+  double bid_price = 3;
+  double bid_quantity = 4;
+  string pair = 5;
+  Timestamp created_at = 6;
+}
+
+message Quotes { repeated Quote quotes = 1; }
+
+message QuotesQuery {
+  string pair = 1;
+  int64 level = 2;
+  int64 limit = 3;
+}
+
+message Timestamp {
+  int64 seconds = 1;
+  int64 nanos = 2;
+}
